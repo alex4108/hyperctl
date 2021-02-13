@@ -52,7 +52,7 @@ switch ($config) {
 $nettype = 'private' # private/public
 $zwitch = 'switch' # private or public switch name
 $natnet = 'natnet' # private net nat net name (privnet only)
-$adapter = 'Wi-Fi' # public net adapter name (pubnet only)
+$adapter = 'Mobo Ethernet' # public net adapter name (pubnet only)
 
 $cpus = 4
 $ram = '4GB'
@@ -81,8 +81,8 @@ $macs = @(
 # https://packages.cloud.google.com/apt/dists/kubernetes-xenial/main/binary-amd64/Packages
 # ctrl+f "kubeadm"
 # $kubeversion = '1.15.11'
-$kubeversion = '1.16.9'
-# $kubeversion = '1.17.5'
+# $kubeversion = '1.16.9'
+$kubeversion = '1.17.16'
 # $kubeversion = '1.18.2'
 
 $kubepackages = @"
@@ -405,6 +405,8 @@ function create-machine($zwitch, $vmname, $cpus, $mem, $hdd, $vhdxtmpl, $cblock,
 
     $vm = new-vm -name $vmname -memorystartupbytes $mem -generation $generation `
       -switchname $zwitch -vhdpath $vhdx -path $workdir
+
+    Set-VMMemory $vmname -DynamicMemoryEnabled $false
 
     if($generation -eq 2) {
       set-vmfirmware -vm $vm -enablesecureboot off
